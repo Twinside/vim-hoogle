@@ -1,0 +1,9 @@
+description
+    This plugin query hoogle for you and display the results in a special window. Commands are provided to quickly open/close the window.
+ 
+install details
+    Unzip Hoogle.zip in your .vim or vimfiles folder (or in your
+    bundle directory if using pathogen)
+
+To understand how to use it, go to :
+:help hoogle
