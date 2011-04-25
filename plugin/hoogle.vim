@@ -35,6 +35,7 @@ function! s:ScratchMarkBuffer()
     setlocal nonumber
     setlocal statusline=%F
     setlocal nofoldenable
+    setlocal foldcolumn=0
 endfunction
 
 " return -1 if no windows was open
