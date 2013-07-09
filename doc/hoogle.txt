@@ -6,14 +6,14 @@
             What is Hoogle
     |hooglecommands|
             |:Hoogle|
-            :HoogleInfo
+            |:HoogleInfo|
             |:HoogleClose|
             |:HoogleLine|
 
     |hoogleconfiguration|
             |g:hoogle_search_count|
             |g:hoogle_search_buf_name|
-            g:hoogle_search_buf_size
+            |g:hoogle_search_buf_size|
 
     |hooglesuggestions|
 
@@ -51,7 +51,7 @@ What is Hoogle ?~
         should arrise
 
                                                      *:HoogleInfo* *HoogleInfo*
- :HoogleInfo |<search>|
+ :HoogleInfo <search>
             Same thing as :Hoogle but will send --info to the hoogle command.
 
                                                    *:HoogleClose* *HoogleClose*
