@@ -6,12 +6,14 @@
             What is Hoogle
     |hooglecommands|
             |:Hoogle|
+            |:HoogleInfo|
             |:HoogleClose|
             |:HoogleLine|
 
     |hoogleconfiguration|
             |g:hoogle_search_count|
             |g:hoogle_search_buf_name|
+            |g:hoogle_search_buf_size|
 
     |hooglesuggestions|
 
@@ -35,7 +37,9 @@ What is Hoogle ?~
                                                              *:Hoogle* *Hoogle*
  :Hoogle <search>
             Search with hoogle installed on the local machine. Results are
-        stored in a scratch buffer of 10 lines by default.
+        stored in a scratch buffer of 10 lines max by default. If <search> is
+        not specified, then it will search with the current word under the
+        cursor.
 
         Examples : >
         ==========
@@ -45,6 +49,11 @@ What is Hoogle ?~
             :Hoogle (a -> b) -> [a] -> [b]
 <       The type will be searched with hoogle, and normally, the map function
         should arrise
+
+                                                     *:HoogleInfo* *HoogleInfo*
+ :HoogleInfo <search>
+            Same thing as :Hoogle but will send --info to the hoogle command.
+
                                                    *:HoogleClose* *HoogleClose*
  :HoogleClose
         Quickly close the hoogle search windows. Cursor stay at it's current
@@ -72,6 +81,13 @@ g:hoogle_search_buf_name
         Hoogle's results. Default name is 'HoogleSearch'. If you want to
         change this name, add following line in your .vimrc : >
         :let g:hoogle_search_buf_name = 'MyFavoriteHoogleName'
+
+                            *hoogle_search_buf_size* *g:hoogle_search_buf_size*
+g:hoogle_search_buf_size
+        Let you customize the max size of the scratch buffer used to display
+        Hoogle's results. Default size is 10.  If you want to change this,
+        add following line in your .vimrc : >
+        :let g:hoogle_search_buffer_size = 20 " set size to 20
 <
 ==============================================================================
 *hooglesuggestions*
