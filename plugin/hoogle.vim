@@ -24,6 +24,10 @@ if !exists("g:hoogle_search_buf_name")
     let g:hoogle_search_buf_name = 'HoogleSearch'
 endif
 
+if !exists("g:hoogle_search_buf_size")
+    let g:hoogle_search_buf_size = 10
+endif
+
 " ScratchMarkBuffer
 " Mark a buffer as scratch
 function! s:ScratchMarkBuffer()
@@ -36,6 +40,27 @@ function! s:ScratchMarkBuffer()
     setlocal statusline=%F
     setlocal nofoldenable
     setlocal foldcolumn=0
+    setlocal wrap
+    setlocal linebreak
+    setlocal nolist
+endfunction
+
+" Return the number of visual lines in the buffer
+fun! s:CountVisualLines()
+    let initcursor = getpos(".")
+    call cursor(1,1)
+    let i = 0
+    let previouspos = [-1,-1,-1,-1]
+    " keep moving cursor down one visual line until it stops moving position
+    while previouspos != getpos(".")
+        let i += 1
+        " store current cursor position BEFORE moving cursor
+        let previouspos = getpos(".")
+        normal! gj
+    endwhile
+    " restore cursor position
+    call setpos(".", initcursor)
+    return i
 endfunction
 
 " return -1 if no windows was open
@@ -67,9 +92,15 @@ fun! HoogleCloseSearch() "{{{
 endfunction "}}}
 
 " Open a scratch buffer or reuse the previous one
-fun! HoogleLookup( search ) "{{{
+fun! HoogleLookup( search, args ) "{{{
     " Ok, previous buffer to jump to it at final
     let last_buffer = bufnr("%")
+
+    if strlen(a:search) == 0
+        let s:search = expand("<cword>")
+    else
+        let s:search = a:search
+    endif
 
     if s:HoogleGotoWin() < 0
         new
@@ -82,10 +113,16 @@ fun! HoogleLookup( search ) "{{{
 
     call s:ScratchMarkBuffer()
 
-    execute '.!hoogle -n=' . g:hoogle_search_count  . ' "' . a:search . '"'
+    execute '.!hoogle -n=' . g:hoogle_search_count  . ' "' . s:search . '"' . a:args
     setl nomodifiable
     
-    execute 'resize ' . line( '$' )
+    let size = s:CountVisualLines()
+
+    if size > g:hoogle_search_buf_size
+        let size = g:hoogle_search_buf_size
+    endif
+
+    execute 'resize ' . size
 
     let win_num = bufwinnr( last_buffer )
     " We must get a real window number, or
@@ -101,7 +138,8 @@ fun! HoogleSearchLine() "{{{
     call HoogleLookup( search )
 endfunction "}}}
 
-command! -nargs=* Hoogle call HoogleLookup( '<args>' )
+command! -nargs=* Hoogle call HoogleLookup( '<args>', '' )
+command! -nargs=* HoogleInfo call HoogleLookup( '<args>', ' --info')
 command! HoogleClose call HoogleCloseSearch()
 command! HoogleLine call HoogleSearchLine()
 
