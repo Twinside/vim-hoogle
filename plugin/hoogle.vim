@@ -28,6 +28,10 @@ if !exists("g:hoogle_search_buf_size")
     let g:hoogle_search_buf_size = 10
 endif
 
+if !exists("g:hoogle_search_jump_back")
+    let g:hoogle_search_jump_back = 1
+endif
+
 " ScratchMarkBuffer
 " Mark a buffer as scratch
 function! s:ScratchMarkBuffer()
@@ -124,11 +128,17 @@ fun! HoogleLookup( search, args ) "{{{
 
     execute 'resize ' . size
 
-    let win_num = bufwinnr( last_buffer )
-    " We must get a real window number, or
-    " else the buffer would have been deleted
-    " already
-    exe win_num . "wincmd w"
+    nnoremap <silent> <buffer> <cr> <esc>:call HoogleLineJump()<cr>
+    nnoremap <silent> <buffer> q <esc>:close<cr>
+    let b:hoogle_search = a:search
+
+    if g:hoogle_search_jump_back == 1
+      let win_num = bufwinnr( last_buffer )
+      " We must get a real window number, or
+      " else the buffer would have been deleted
+      " already
+      exe win_num . "wincmd w"
+    endif
 endfunction "}}}
 
 " Search the current line and delete it
@@ -136,6 +146,14 @@ fun! HoogleSearchLine() "{{{
     let search = getline( '.' )
     normal dd
     call HoogleLookup( search )
+endfunction "}}}
+
+fun! HoogleLineJump() "{{{
+  if exists('b:hoogle_search') == 0
+    return
+  endif
+  call HoogleLookup( b:hoogle_search, ' --info --start=' . line('.') )
+  unlet b:hoogle_search
 endfunction "}}}
 
 command! -nargs=* Hoogle call HoogleLookup( '<args>', '' )
