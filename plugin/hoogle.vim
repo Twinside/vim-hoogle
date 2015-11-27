@@ -32,6 +32,10 @@ if !exists("g:hoogle_search_jump_back")
     let g:hoogle_search_jump_back = 1
 endif
 
+if !exists("g:hoogle_search_databases")
+    let g:hoogle_search_databases = ''
+endif
+
 " ScratchMarkBuffer
 " Mark a buffer as scratch
 function! s:ScratchMarkBuffer()
@@ -106,6 +110,12 @@ fun! HoogleLookup( search, args ) "{{{
         let s:search = a:search
     endif
 
+    if strlen(g:hoogle_search_databases) == 0
+	let s:databases = ''
+    else
+	let s:databases = ' --databases="' . g:hoogle_search_databases . '"'
+    endif
+
     if s:HoogleGotoWin() < 0
         new
         exe 'file ' . g:hoogle_search_buf_name
@@ -117,7 +127,7 @@ fun! HoogleLookup( search, args ) "{{{
 
     call s:ScratchMarkBuffer()
 
-    execute '.!hoogle -n=' . g:hoogle_search_count  . ' "' . s:search . '"' . a:args
+    execute '.!hoogle -n=' . g:hoogle_search_count  . ' "' . s:search . '"' . s:databases . a:args
     setl nomodifiable
     
     let size = s:CountVisualLines()
