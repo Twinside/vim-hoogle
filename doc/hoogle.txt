@@ -48,7 +48,7 @@ What is Hoogle ?~
 
             :Hoogle (a -> b) -> [a] -> [b]
 <       The type will be searched with hoogle, and normally, the map function
-        should arrise
+        should arise
 
                                                      *:HoogleInfo* *HoogleInfo*
  :HoogleInfo <search>
@@ -77,7 +77,7 @@ What is Hoogle ?~
                                         
                             *hoogle_search_buf_name* *g:hoogle_search_buf_name*
 g:hoogle_search_buf_name
-        Let you customize the name of the scratch buffer used to display
+        Lets you customize the name of the scratch buffer used to display
         Hoogle's results. Default name is 'HoogleSearch'. If you want to
         change this name, add following line in your .vimrc : >
         :let g:hoogle_search_buf_name = 'MyFavoriteHoogleName'
