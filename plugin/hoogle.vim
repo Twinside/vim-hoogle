@@ -162,7 +162,7 @@ fun! HoogleLineJump() "{{{
   if exists('b:hoogle_search') == 0
     return
   endif
-  call HoogleLookup( b:hoogle_search, ' --info --start=' . line('.') )
+  call HoogleLookup( b:hoogle_search, ' --info' )
   unlet b:hoogle_search
 endfunction "}}}
 
