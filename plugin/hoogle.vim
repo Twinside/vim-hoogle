@@ -162,7 +162,16 @@ fun! HoogleLineJump() "{{{
   if exists('b:hoogle_search') == 0
     return
   endif
-  call HoogleLookup( b:hoogle_search, ' --info' )
+  let b:cur_line = getline('.')
+  if len(b:cur_line) >= 2
+      let b:split_line = split(b:cur_line)
+      let b:hoogle_search = b:split_line[0] . '.' . b:split_line[1]       " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
+                                                                          " this results in a search of `Data.IntMap.Strict.lookup`
+      call HoogleLookup( b:hoogle_search, ' --info' )
+      unlet b:split_line
+  else
+      return
+  endif
   unlet b:hoogle_search
 endfunction "}}}
 
