@@ -16,6 +16,10 @@ if exists("g:__HOOGLE_VIM__")
 endif
 let g:__HOOGLE_VIM__ = 1
 
+if !exists("g:hoogle_search_bin")
+    let g:hoogle_search_bin = 'hoogle'
+endif
+
 if !exists("g:hoogle_search_count")
     let g:hoogle_search_count = 10
 endif
@@ -127,7 +131,7 @@ fun! HoogleLookup( search, args ) "{{{
 
     call s:ScratchMarkBuffer()
 
-    execute '.!hoogle -n=' . g:hoogle_search_count  . ' "' . s:search . '"' . s:databases . a:args
+    execute '.!' . g:hoogle_search_bin . ' -n=' . g:hoogle_search_count  . ' "' . s:search . '"' . s:databases . a:args
     setl nomodifiable
     
     let size = s:CountVisualLines()
