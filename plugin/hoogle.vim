@@ -49,6 +49,7 @@ function! s:ScratchMarkBuffer()
     setlocal noswapfile
     setlocal buflisted
     setlocal nonumber
+    setlocal norelativenumber
     setlocal statusline=%F
     setlocal nofoldenable
     setlocal foldcolumn=0
