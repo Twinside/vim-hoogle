@@ -144,6 +144,7 @@ fun! HoogleLookup( search, args ) "{{{
     execute 'resize ' . size
 
     nnoremap <silent> <buffer> <cr> <esc>:call HoogleLineJump()<cr>
+    nnoremap <silent> <buffer> gx <esc>:call HoogleFollowLink()<cr>
     nnoremap <silent> <buffer> q <esc>:close<cr>
     let b:hoogle_search = a:search
 
@@ -167,18 +168,55 @@ fun! HoogleLineJump() "{{{
   if exists('b:hoogle_search') == 0
     return
   endif
-  let b:cur_line = getline('.')
-  if len(b:cur_line) >= 2
-      let b:split_line = split(b:cur_line)
-      let b:hoogle_search = b:split_line[0] . '.' . b:split_line[1]       " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
-                                                                          " this results in a search of `Data.IntMap.Strict.lookup`
+  let l:search = s:getSearch()
+  if l:search !=? ''
+      let b:hoogle_search = l:search
+      let b:infoLink = s:getLinkFromSearch(b:hoogle_search)
       call HoogleLookup( b:hoogle_search, ' --info' )
-      unlet b:split_line
   else
       return
   endif
   unlet b:hoogle_search
 endfunction "}}}
+
+fun! s:getSearch()
+  let l:cur_line = getline('.')
+  if len(l:cur_line) >= 2
+      let l:split_line = split(l:cur_line)
+      return l:split_line[0] . '.' . l:split_line[1]       " since results are given in the format `Data.IntMap.Strict lookup :: Key -> IntMap a -> Maybe a`
+                                                           " this results in a search of `Data.IntMap.Strict.lookup`
+  endif
+  return ''
+endfunction
+
+fun! HoogleFollowLink() "{{{
+  if !exists('b:hoogle_search') && exists('b:infoLink')    " In the info window
+    call netrw#BrowseX(b:infoLink, 0)
+    return
+  else
+    call netrw#BrowseX(s:getLinkFromSearch(s:getSearch()), 0) " In the results window
+  endif
+endfunction "}}}
+
+fun! s:getLinkFromSearch(search)
+
+  if strlen(g:hoogle_search_databases) == 0
+    let s:databases = ''
+  else
+    let s:databases = ' --databases="' . g:hoogle_search_databases . '"'
+  endif
+
+  let l:res = systemlist(g:hoogle_search_bin . ' -n=1 --link ' . '"' . a:search . '"' . s:databases)
+  let l:line = l:res[0]
+  if len(l:line) >= 2
+    let l:split_line = split(l:line, ' -- ')
+    if len(l:split_line) >= 2
+      let s:link = l:split_line[1]
+      return s:link
+    endif
+  endif
+  return ''
+endfunction
 
 command! -nargs=* Hoogle call HoogleLookup( '<args>', '' )
 command! -nargs=* HoogleInfo call HoogleLookup( '<args>', ' --info')
