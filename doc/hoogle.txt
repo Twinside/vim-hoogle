@@ -14,6 +14,7 @@
             |g:hoogle_search_count|
             |g:hoogle_search_buf_name|
             |g:hoogle_search_buf_size|
+            |g:hoogle_search_bin|
 
     |hooglesuggestions|
 
@@ -88,6 +89,14 @@ g:hoogle_search_buf_size
         Hoogle's results. Default size is 10.  If you want to change this,
         add following line in your .vimrc : >
         :let g:hoogle_search_buffer_size = 20 " set size to 20
+<
+                                 *hoogle_search_bin* *g:hoogle_search_buf_size*
+g:hoogle_search_bin
+        Lets you customize the hoogle command to be called,
+        default is just 'hoogle'. If you want to change this,
+        for example, to use stack's local version of hoogle,
+        add the following line to your .vimrc :
+        :let g:hoogle_search_bin = 'stack hoogle --'
 <
 ==============================================================================
 *hooglesuggestions*
