@@ -107,12 +107,11 @@ endfunction "}}}
 fun! s:GetFullWord()
   let line = getline('.')
   let line_n = line('.')
-  let col_n = col('.')
 
   let start = max([0, searchpos('\s', 'bcn', line_n)[1]])
   let end = searchpos('\s', 'cn', line_n)[1]
 
-  if end == 0
+  if !end
     let end = searchpos('[\n|\r]', 'cn', line('.'))[1]
   endif
 
