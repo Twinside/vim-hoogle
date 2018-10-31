@@ -104,13 +104,32 @@ fun! HoogleCloseSearch() "{{{
     exe win_num . "wincmd w"
 endfunction "}}}
 
+fun! s:GetFullWord()
+  let line = getline('.')
+  let line_n = line('.')
+
+  let start = max([0, searchpos('\s', 'bcn', line_n)[1]])
+  let end = searchpos('\s', 'cn', line_n)[1]
+
+  if !end
+    let end = searchpos('[\n|\r]', 'cn', line('.'))[1]
+  endif
+
+  return strpart(line, start, end - start)
+endfunction
+
 " Open a scratch buffer or reuse the previous one
 fun! HoogleLookup( search, args ) "{{{
     " Ok, previous buffer to jump to it at final
     let last_buffer = bufnr("%")
 
     if strlen(a:search) == 0
+      try
+        let s:search = s:GetFullWord()
+      catch
+        " Fallback to <cword> expansion if the word can't be get otherwise.
         let s:search = expand("<cword>")
+      endtry
     else
         let s:search = a:search
     endif
