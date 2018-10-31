@@ -105,15 +105,18 @@ fun! HoogleCloseSearch() "{{{
 endfunction "}}}
 
 fun! s:GetFullWord()
-  let l:line = getline('.')
-  let l:start = max([0, searchpos('\s', 'bn', line('.'))[1]])
-  let l:end = searchpos('\s', 'n', line('.'))[1]
+  let line = getline('.')
+  let line_n = line('.')
+  let col_n = col('.')
 
-  if !l:end
-    let l:end = searchpos('[\n|\r]', 'n', line('.'))[1]
+  let start = max([0, searchpos('\s', 'bcn', line_n)[1]])
+  let end = searchpos('\s', 'cn', line_n)[1]
+
+  if end == 0
+    let end = searchpos('[\n|\r]', 'cn', line('.'))[1]
   endif
 
-  return strpart(l:line, l:start, l:end - l:start)
+  return strpart(line, start, end - start)
 endfunction
 
 " Open a scratch buffer or reuse the previous one
